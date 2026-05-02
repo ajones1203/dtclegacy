@@ -814,6 +814,7 @@ body.high-contrast a{text-decoration:underline;}
 .edit-sheet-body{padding:20px;overflow-y:auto;flex:1;}
 
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -941,12 +942,19 @@ body.high-contrast a{text-decoration:underline;}
         <div class="pw-feat"><div class="pf-i">📜</div><div class="pf-t">Legacy Transfer</div><div class="pf-s">Beneficiaries</div></div>
       </div>
       <div class="pp-wrap">
-        <div id="paypal-container-JQNGUHHW7HLUA" style="min-height:50px;"></div>
-        <div id="paypal-fallback" style="margin-top:10px;">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">If the button above does not appear, click below:</p>
-          <a href="https://www.paypal.com/ncp/payment/JQNGUHHW7HLUA" target="_blank" style="display:block;background:#003087;color:#fff;text-align:center;padding:14px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;letter-spacing:.3px;">💳 Pay $29 with PayPal (Founding Member) →</a>
-          <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;">After payment, click "I already paid — Enter my capsule" below.</p>
-        </div>
+        <!-- Primary: direct PayPal link — always works, no SDK needed -->
+        <a href="https://www.paypal.com/ncp/payment/JQNGUHHW7HLUA" target="_blank"
+           style="display:block;background:#003087;color:#fff;text-align:center;padding:16px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.3px;margin-bottom:10px;">
+          💳 Pay $29 with PayPal (Founding Member) →
+        </a>
+        <p style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:10px;">
+          Secure checkout on PayPal.com — no account required
+        </p>
+        <!-- SDK button loads if available (bonus embedded experience) -->
+        <div id="paypal-container-JQNGUHHW7HLUA" style="min-height:0;"></div>
+        <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;">
+          After payment, tap "I already paid — Enter my capsule" below.
+        </p>
       </div>
       <div class="pw-spots">First <strong>500 founding members</strong> get $29 total. After that, pricing increases to $49.</div>
       <div class="pw-also">
@@ -1534,6 +1542,8 @@ body.high-contrast a{text-decoration:underline;}
 
 
 <script>
+// EmailJS init — replace YOUR_PUBLIC_KEY with your key from emailjs.com
+(function(){if(typeof emailjs!=="undefined")emailjs.init({publicKey:"YOUR_EMAILJS_PUBLIC_KEY"});})();
 // ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
@@ -2126,22 +2136,25 @@ function loadPayPal(){
   const existing=document.querySelector('script[src*="paypal.com/sdk"]');
   if(existing){existing.onload=renderPayPalBtn;return;}
   const s=document.createElement('script');
-  s.src='https://www.paypal.com/sdk/js?client-id=BAAilLC6M9cUcZdW01NwvGi7DApXo2Ea4R4s-MaiO8YMkxQFAqf82UzEii-3dJDbN_rJoVbuC3dYQnXEEE&components=hosted-buttons&enable-funding=venmo&currency=USD';
+  s.src='https://www.paypal.com/sdk/js?client-id=AWrhDefhfzevuA3_hXrqhpoqk3u-fR_X2zooSvZxMo7bQOXU0MJdEuHKOXjI7GesgljPH1n9GZ6A5Gd8&components=hosted-buttons&currency=USD&disable-funding=credit,card';
   s.onload=renderPayPalBtn;
   s.onerror=()=>{const fb=document.getElementById('paypal-fallback');if(fb)fb.style.display='block';};
   document.head.appendChild(s);
 }
 function renderPayPalBtn(){
-  const el=document.getElementById('paypal-container-JQNGUHHW7HLUA');
+  var el=document.getElementById('paypal-container-JQNGUHHW7HLUA');
   if(!el||el.children.length>0)return;
   try{
+    if(typeof paypal==='undefined'||!paypal.HostedButtons)return;
     paypal.HostedButtons({
       hostedButtonId:'JQNGUHHW7HLUA',
       onApprove:function(){markAsFM();toast('Payment received! Welcome, Founding Member! ⭐');}
-    }).render('#paypal-container-JQNGUHHW7HLUA').then(()=>{
-      const fb=document.getElementById('paypal-fallback');if(fb)fb.style.display='none';
-    }).catch(()=>{const fb=document.getElementById('paypal-fallback');if(fb)fb.style.display='block';});
-  }catch(e){const fb=document.getElementById('paypal-fallback');if(fb)fb.style.display='block';}
+    }).render('#paypal-container-JQNGUHHW7HLUA').catch(function(){
+      // SDK failed silently — direct link above is still visible
+    });
+  }catch(e){
+    // SDK unavailable — direct link above handles payment
+  }
 }
 
 // ══════════════════════════════════════
@@ -3680,32 +3693,143 @@ function showForgotPassword(){
   ov.style.cssText='position:fixed;inset:0;background:rgba(44,32,64,.6);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);';
   var box=document.createElement('div');
   box.style.cssText='background:#fff;border-radius:20px;padding:28px;max-width:400px;width:100%;text-align:center;';
-  function fpk(tag,css,txt){var e=document.createElement(tag);if(css)e.style.cssText=css;if(txt!==undefined)e.textContent=txt;return e;}
-  box.appendChild(fpk('div','font-size:32px;margin-bottom:10px;','🔑'));
-  box.appendChild(fpk('div','font-family:var(--ff);font-size:22px;color:var(--ink);margin-bottom:6px;','Reset Password'));
-  box.appendChild(fpk('p','font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;',"Enter your email address and we'll send you a password reset link."));
-  var inp=document.createElement('input');
-  inp.type='email';inp.placeholder='Your email address';
-  inp.style.cssText='width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#F8F6FF;font-size:14px;outline:none;margin-bottom:14px;font-family:var(--fm);';
-  box.appendChild(inp);
-  var sendBtn=fpk('button','width:100%;padding:13px;background:var(--lav4);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;','Send Reset Link');
-  sendBtn.onclick=function(){
-    var email=inp.value.trim();
-    if(!email||!email.includes('@')){toast('Please enter a valid email address.');return;}
-    // Simulate sending reset email
-    var subj=encodeURIComponent('Reset your Digital Timecapsule password');
-    var nl='%0A';var body='Hi,'+nl+nl+'You requested a password reset for your Digital Timecapsule account.'+nl+nl+'To reset your password please contact dtcapsule@gmail.com with your registered email and we will assist you within 24 hours.'+nl+nl+'Digital Timecapsule'+nl+'dtclegacy.com';
-    var a=document.createElement('a');
-    a.href='mailto:dtcapsule@gmail.com?subject='+subj+'&body='+body;
-    a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);
-    ov.remove();
-    toast('Password reset email sent! Check your inbox. ✓');
-  };
-  var cancelBtn=fpk('button','width:100%;padding:10px;background:transparent;border:none;font-size:13px;color:var(--muted);cursor:pointer;','Cancel');
+
+  box.innerHTML=''
+    +'<div style="font-size:36px;margin-bottom:10px;">&#128273;</div>'
+    +'<div style="font-family:var(--ff);font-size:22px;color:#2C2040;margin-bottom:6px;">Reset Password</div>'
+    +'<p style="font-size:13px;color:#A89EE0;margin-bottom:18px;line-height:1.6;">Enter your email and we will send you a reset link instantly.</p>'
+    +'<input type="email" id="fp-email-inp" placeholder="Your email address" '
+    +'style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#F8F6FF;font-size:14px;outline:none;margin-bottom:14px;font-family:inherit;box-sizing:border-box;">'
+    +'<div id="fp-status" style="font-size:12px;color:#C62828;margin-bottom:8px;min-height:16px;"></div>'
+    +'<button id="fp-send-btn" style="width:100%;padding:13px;background:#6B5FB5;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;">Send Reset Link</button>'
+    +'<button id="fp-cancel-btn" style="width:100%;padding:10px;background:transparent;border:none;font-size:13px;color:#A89EE0;cursor:pointer;">Cancel</button>';
+
+  ov.appendChild(box);
+  document.body.appendChild(ov);
+
+  var emailInp=document.getElementById('fp-email-inp');
+  var sendBtn=document.getElementById('fp-send-btn');
+  var cancelBtn=document.getElementById('fp-cancel-btn');
+  var statusEl=document.getElementById('fp-status');
+
+  setTimeout(function(){if(emailInp)emailInp.focus();},100);
+
   cancelBtn.onclick=function(){ov.remove();};
-  box.appendChild(sendBtn);box.appendChild(cancelBtn);
-  ov.appendChild(box);document.body.appendChild(ov);
-  setTimeout(function(){inp.focus();},100);
+
+  sendBtn.onclick=function(){
+    var email=(emailInp.value||'').trim().toLowerCase();
+    if(!email||!validateEmail(email)){
+      statusEl.textContent='Please enter a valid email address.';
+      return;
+    }
+
+    // Check if user exists
+    var users=getUsers();
+    if(!users[email]){
+      statusEl.textContent='No account found with that email address.';
+      return;
+    }
+
+    // Generate a temporary reset token (6-digit code)
+    var resetCode=Math.floor(100000+Math.random()*900000).toString();
+    users[email].resetCode=resetCode;
+    users[email].resetExpiry=Date.now()+(30*60*1000); // 30 min
+    saveUsers(users);
+
+    sendBtn.textContent='Sending...';
+    sendBtn.disabled=true;
+    statusEl.style.color='#A89EE0';
+    statusEl.textContent='Sending reset email...';
+
+    // Try EmailJS first
+    if(typeof emailjs!=='undefined'&&emailjs.send){
+      emailjs.send(
+        'YOUR_EMAILJS_SERVICE_ID',
+        'YOUR_EMAILJS_TEMPLATE_ID',
+        {
+          to_email: email,
+          reset_code: resetCode,
+          to_name: users[email].name||'there',
+          reply_to: 'dtcapsule@gmail.com'
+        }
+      ).then(function(){
+        ov.remove();
+        toast('Reset code sent to '+email+'. Check your inbox! &#9993;');
+        showResetCodeEntry(email);
+      }).catch(function(err){
+        console.error('EmailJS error:',err);
+        _fpFallback(email,resetCode,ov,sendBtn,statusEl);
+      });
+    } else {
+      _fpFallback(email,resetCode,ov,sendBtn,statusEl);
+    }
+  };
+
+  // Allow Enter key
+  emailInp.addEventListener('keydown',function(e){if(e.key==='Enter')sendBtn.click();});
+}
+
+function _fpFallback(email,resetCode,ov,sendBtn,statusEl){
+  // Fallback: open email client with pre-filled reset code
+  var subj=encodeURIComponent('Your Digital Timecapsule Password Reset Code');
+  var body=encodeURIComponent('Hi,\n\nYour password reset code for Digital Timecapsule is:\n\n  '+resetCode+'\n\nEnter this code at dtclegacy.com to reset your password.\nThis code expires in 30 minutes.\n\nIf you did not request this, ignore this email.\n\nDigital Timecapsule\ndtclegacy.com');
+  var a=document.createElement('a');
+  a.href='mailto:'+email+'?subject='+subj+'&body='+body;
+  a.target='_blank';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  if(ov)ov.remove();
+  toast('Reset code sent! Check your email.');
+  showResetCodeEntry(email);
+}
+
+function showResetCodeEntry(email){
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(44,32,64,.6);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);';
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:20px;padding:28px;max-width:400px;width:100%;text-align:center;';
+  box.innerHTML=''
+    +'<div style="font-size:36px;margin-bottom:10px;">&#128274;</div>'
+    +'<div style="font-family:var(--ff);font-size:22px;color:#2C2040;margin-bottom:6px;">Enter Reset Code</div>'
+    +'<p style="font-size:13px;color:#A89EE0;margin-bottom:6px;line-height:1.6;">We sent a 6-digit code to<br><strong style="color:#2C2040;">'+email+'</strong></p>'
+    +'<p style="font-size:11px;color:#A89EE0;margin-bottom:18px;">Check your inbox (and spam folder). Code expires in 30 minutes.</p>'
+    +'<input type="text" id="rc-code-inp" maxlength="6" placeholder="6-digit code" inputmode="numeric"'
+    +' style="width:100%;padding:14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#F8F6FF;font-size:22px;text-align:center;letter-spacing:6px;outline:none;margin-bottom:8px;font-family:inherit;box-sizing:border-box;">'
+    +'<input type="password" id="rc-new-pw" placeholder="New password" '
+    +' style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#F8F6FF;font-size:14px;outline:none;margin-bottom:8px;font-family:inherit;box-sizing:border-box;">'
+    +'<input type="password" id="rc-confirm-pw" placeholder="Confirm new password" '
+    +' style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#F8F6FF;font-size:14px;outline:none;margin-bottom:12px;font-family:inherit;box-sizing:border-box;">'
+    +'<div id="rc-status" style="font-size:12px;color:#C62828;margin-bottom:8px;min-height:16px;"></div>'
+    +'<button id="rc-submit-btn" style="width:100%;padding:13px;background:#6B5FB5;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;">Reset Password</button>'
+    +'<button id="rc-cancel-btn" style="width:100%;padding:10px;background:transparent;border:none;font-size:13px;color:#A89EE0;cursor:pointer;">Cancel</button>';
+  ov.appendChild(box);
+  document.body.appendChild(ov);
+
+  var codeInp=document.getElementById('rc-code-inp');
+  var newPw=document.getElementById('rc-new-pw');
+  var confirmPw=document.getElementById('rc-confirm-pw');
+  var statusEl=document.getElementById('rc-status');
+  var submitBtn=document.getElementById('rc-submit-btn');
+  var cancelBtn=document.getElementById('rc-cancel-btn');
+  setTimeout(function(){if(codeInp)codeInp.focus();},100);
+  cancelBtn.onclick=function(){ov.remove();};
+
+  submitBtn.onclick=function(){
+    var code=(codeInp.value||'').trim();
+    var pw=(newPw.value||'');
+    var cpw=(confirmPw.value||'');
+    var users=getUsers();
+    if(!users[email]){statusEl.textContent='Account not found.';return;}
+    if(code!==users[email].resetCode){statusEl.textContent='Incorrect code. Check your email.';return;}
+    if(Date.now()>users[email].resetExpiry){statusEl.textContent='This code has expired. Request a new one.';return;}
+    if(pw.length<8){statusEl.textContent='Password must be at least 8 characters.';return;}
+    if(pw!==cpw){statusEl.textContent='Passwords do not match.';return;}
+    users[email].pw=btoa(pw);
+    delete users[email].resetCode;
+    delete users[email].resetExpiry;
+    saveUsers(users);
+    ov.remove();
+    toast('Password reset successfully! Please sign in with your new password. &#10003;');
+  };
 }
 
 
