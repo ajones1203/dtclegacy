@@ -943,7 +943,7 @@ body.high-contrast a{text-decoration:underline;}
       </div>
       <div class="pp-wrap">
         <!-- Primary: direct PayPal link — always works, no SDK needed -->
-        <a href="https://www.paypal.com/ncp/payment/JQNGUHHW7HLUA" target="_blank"
+        <a href="https://www.paypal.com/ncp/payment/UQZSV3QPQEAHG" target="_blank"
            style="display:block;background:#003087;color:#fff;text-align:center;padding:16px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.3px;margin-bottom:10px;">
           💳 Pay $29 with PayPal (Founding Member) →
         </a>
@@ -951,7 +951,7 @@ body.high-contrast a{text-decoration:underline;}
           Secure checkout on PayPal.com — no account required
         </p>
         <!-- SDK button loads if available (bonus embedded experience) -->
-        <div id="paypal-container-JQNGUHHW7HLUA" style="min-height:0;"></div>
+        <div id="paypal-container-UQZSV3QPQEAHG" style="min-height:0;"></div>
         <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;">
           After payment, tap "I already paid — Enter my capsule" below.
         </p>
@@ -1856,14 +1856,14 @@ function showPaymentModal(plan){
   box.appendChild(how);
   box.appendChild(mk('div','font-size:11px;font-weight:700;color:#2C2040;letter-spacing:.5px;margin-bottom:10px;','CHOOSE HOW TO PAY'));
   var mb=document.createElement('a');
-  mb.href='https://www.paypal.com/ncp/payment/JQNGUHHW7HLUA';mb.target='_blank';
+  mb.href='https://www.paypal.com/ncp/payment/UQZSV3QPQEAHG';mb.target='_blank';
   mb.style.cssText='display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:'+color+';color:#fff;border-radius:12px;margin-bottom:8px;text-decoration:none;box-sizing:border-box;';
   var mL=mk('div');mL.innerHTML='<div style="font-size:14px;font-weight:700;">Pay Monthly — $'+monthly+'/month × 10 months</div><div style="font-size:11px;opacity:.8;">Same ownership as paying upfront · Cancel anytime before month 10</div>';
   mb.appendChild(mL);mb.appendChild(mk('div','font-size:18px;font-weight:700;color:#6B5FB5;','$'+monthly+'/mo'));
   mb.onclick=function(){setTimeout(function(){showCodeAfterPayment(plan,userEmail,userName,false);},2500);};
   box.appendChild(mb);
   var ob=document.createElement('a');
-  ob.href='https://www.paypal.com/ncp/payment/JQNGUHHW7HLUA';ob.target='_blank';
+  ob.href='https://www.paypal.com/ncp/payment/UQZSV3QPQEAHG';ob.target='_blank';
   ob.style.cssText='display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 16px;background:transparent;color:'+color+';border:2px solid '+color+';border-radius:12px;margin-bottom:16px;text-decoration:none;box-sizing:border-box;';
   var oL=mk('div');oL.innerHTML='<div style="font-size:14px;font-weight:700;">Pay in Full — Best Value</div><div style="font-size:11px;opacity:.7;">$'+full+' one-time — yours forever (first 500 founding members)</div>';
   ob.appendChild(oL);ob.appendChild(mk('div','font-size:18px;font-weight:700;color:'+color+';','$'+full));
@@ -2136,20 +2136,20 @@ function loadPayPal(){
   const existing=document.querySelector('script[src*="paypal.com/sdk"]');
   if(existing){existing.onload=renderPayPalBtn;return;}
   const s=document.createElement('script');
-  s.src='https://www.paypal.com/sdk/js?client-id=AWrhDefhfzevuA3_hXrqhpoqk3u-fR_X2zooSvZxMo7bQOXU0MJdEuHKOXjI7GesgljPH1n9GZ6A5Gd8&components=hosted-buttons&currency=USD&disable-funding=credit,card';
+  s.src='https://www.paypal.com/sdk/js?client-id=BAAilLC6M9cUcZdW01NwvGi7DApXo2Ea4R4s-MaiO8YMkxQFAqf82UzEii-3dJDbN_rJoVbuC3dYQnXEEE&components=hosted-buttons&currency=USD&disable-funding=credit,card';
   s.onload=renderPayPalBtn;
   s.onerror=()=>{const fb=document.getElementById('paypal-fallback');if(fb)fb.style.display='block';};
   document.head.appendChild(s);
 }
 function renderPayPalBtn(){
-  var el=document.getElementById('paypal-container-JQNGUHHW7HLUA');
+  var el=document.getElementById('paypal-container-UQZSV3QPQEAHG');
   if(!el||el.children.length>0)return;
   try{
     if(typeof paypal==='undefined'||!paypal.HostedButtons)return;
     paypal.HostedButtons({
-      hostedButtonId:'JQNGUHHW7HLUA',
+      hostedButtonId:'UQZSV3QPQEAHG',
       onApprove:function(){markAsFM();toast('Payment received! Welcome, Founding Member! ⭐');}
-    }).render('#paypal-container-JQNGUHHW7HLUA').catch(function(){
+    }).render('#paypal-container-UQZSV3QPQEAHG').catch(function(){
       // SDK failed silently — direct link above is still visible
     });
   }catch(e){
