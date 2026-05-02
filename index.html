@@ -2022,8 +2022,6 @@ function showPaywall(name){
   document.getElementById('paywall-screen').classList.add('active');
   const el=document.getElementById('pw-username');if(el)el.textContent='Hi, '+name.split(' ')[0];
   loadPayPal();
-  // Show permission banner after short delay
-  setTimeout(showPermissionBanner,2000);
 }
 
 function bypassPaywallWithCode(){
