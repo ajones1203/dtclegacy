@@ -535,11 +535,11 @@ html,body{height:100%;font-family:var(--fb);background:var(--lav);color:var(--in
 /* ── SETTINGS SHEET ── */
 .sp-overlay{position:fixed;inset:0;background:rgba(44,32,64,.55);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 .sp-overlay.open{display:flex;}
-.sp-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(44,32,64,.2);}
-.sp-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sp-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:600px;height:92vh;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(44,32,64,.2);overflow:hidden;}
+.sp-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;flex-shrink:0;}
 .sp-hdr h3{font-family:var(--ff);font-size:21px;font-weight:400;color:var(--ink);}
-.sp-body{overflow-y:auto;padding:18px;flex:1;}
-.sp-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto;scrollbar-width:none;}
+.sp-body{overflow-y:auto;padding:18px;flex:1;min-height:0;-webkit-overflow-scrolling:touch;}
+.sp-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;}
 .sp-tabs::-webkit-scrollbar{display:none;}
 .stab{padding:9px 14px;font-size:11px;font-family:var(--fm);color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:var(--tr);white-space:nowrap;letter-spacing:.4px;font-weight:500;}
 .stab.active{color:var(--lav4);border-bottom-color:var(--lav4);}
@@ -814,7 +814,29 @@ body.high-contrast a{text-decoration:underline;}
 .edit-sheet-body{padding:20px;overflow-y:auto;flex:1;}
 
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">  // Toggle
+  _liveFacing=_liveFacing==='user'?'environment':'user';
+  // Restart
+  navigator.mediaDevices.getUserMedia({video:{facingMode:_liveFacing},audio:true})
+    .then(function(stream){
+      vid.srcObject=stream;
+      vid.play();
+      toast(_liveFacing==='environment'?'Switched to back camera':'Switched to front camera');
+    })
+    .catch(function(){toast('Could not switch camera.');});
+}
+
+
+// Global camera facing state
+var _liveFacing='user';
+
+function flipLiveCamera(){
+  var vid=document.getElementById('live-preview');
+  if(!vid||!vid.srcObject){toast('Start your camera first.');return;}
+  // Stop current stream
+  vid.srcObject.getTracks().forEach(function(t){t.stop();});
+
+</script>
 </head>
 <body>
 
@@ -904,63 +926,39 @@ body.high-contrast a{text-decoration:underline;}
       </div>
     </div>
     <div class="pw-offer">
-      <div class="pw-badge">⭐ Founding Member Offer — First 500 Spots</div>
+      <div class="pw-badge">⭐ Founding Member Offer — Kickstarter Exclusive</div>
       <div class="pw-offer-title">All Features. <em>Forever.</em></div>
 
-      <!-- OPTION A: PAY UPFRONT -->
-      <div style="background:linear-gradient(135deg,rgba(107,95,181,.1),rgba(201,168,76,.08));border:2px solid #6B5FB5;border-radius:16px;padding:18px 20px;margin-bottom:12px;text-align:center;">
-        <div style="font-family:var(--fm);font-size:10px;letter-spacing:.15em;color:#6B5FB5;margin-bottom:6px;">BEST VALUE — PAY ONCE, OWN FOREVER</div>
-        <div style="font-family:var(--ff);font-size:38px;font-weight:300;color:var(--ink);line-height:1;">$29 <span style="font-size:16px;color:var(--muted);">one-time</span></div>
-        <div style="font-size:12px;color:#0F7A5A;font-weight:600;margin-top:4px;">✓ Pay today. Capsule is yours forever. No more charges.</div>
+      <!-- KICKSTARTER BANNER -->
+      <div style="background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(107,95,181,.1));border:2px solid #C9A84C;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:8px;">🚀</div>
+        <div style="font-family:var(--ff);font-size:22px;font-weight:700;color:#C9A84C;margin-bottom:8px;">Now on Kickstarter</div>
+        <div style="font-size:14px;color:var(--ink);line-height:1.7;margin-bottom:14px;">We are raising funds to build the iOS app, Android app, and automated payment system. Back us on Kickstarter to get exclusive founding member pricing you cannot get anywhere else.</div>
+        <a href="https://www.kickstarter.com/projects/dtclegacy/810706892" target="_blank" style="display:block;background:#C9A84C;color:#2C2040;text-align:center;padding:16px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;letter-spacing:.5px;">🎯 Back Us on Kickstarter →</a>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;">Kickstarter backers get exclusive pricing &amp; perks not available here</div>
       </div>
 
-      <!-- DIVIDER -->
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <div style="flex:1;height:1px;background:var(--border);"></div>
-        <div style="font-size:11px;font-family:var(--fm);color:var(--muted);">OR SPREAD IT OUT</div>
-        <div style="flex:1;height:1px;background:var(--border);"></div>
+      <!-- WAITLIST -->
+      <div style="background:#F8F6FF;border:1.5px solid #E4DEFF;border-radius:16px;padding:18px 20px;margin-bottom:16px;text-align:center;">
+        <div style="font-family:var(--fm);font-size:10px;letter-spacing:.15em;color:#6B5FB5;margin-bottom:8px;">JOIN THE WAITLIST</div>
+        <div style="font-size:14px;color:var(--ink);line-height:1.7;margin-bottom:14px;">Not ready to back on Kickstarter? Join our waitlist and we'll notify you when direct signup opens after the campaign.</div>
+        <input type="email" id="waitlist-email" placeholder="Your email address" style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#fff;font-size:14px;outline:none;margin-bottom:10px;font-family:var(--fm);box-sizing:border-box;">
+        <button onclick="joinWaitlist()" style="width:100%;padding:13px;background:#6B5FB5;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">Join Waitlist ✓</button>
       </div>
 
-      <!-- OPTION B: MONTHLY COMING SOON -->
-      <div style="background:#F8F6FF;border:1.5px dashed #C9A84C;border-radius:16px;padding:16px 20px;margin-bottom:16px;text-align:center;opacity:.85;">
-        <div style="font-family:var(--fm);font-size:10px;letter-spacing:.15em;color:var(--muted);margin-bottom:6px;">MONTHLY PLAN — COMING SOON</div>
-        <div style="font-family:var(--ff);font-size:32px;font-weight:300;color:var(--ink);line-height:1;">$2.99 <span style="font-size:14px;color:var(--muted);">/month</span></div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px;">× 10 months = $29 total (launching soon)</div>
-        <div style="font-size:12px;color:#C9A84C;font-weight:600;margin-top:8px;line-height:1.5;">
-          ⏳ Monthly billing launching soon.<br>Pay $29 today and lock in your founding member price forever.
-        </div>
+      <!-- FEATURES LIST -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div style="font-size:12px;color:var(--ink);padding:8px 10px;background:#F8F6FF;border-radius:8px;">📔 Digital Diary</div>
+        <div style="font-size:12px;color:var(--ink);padding:8px 10px;background:#F8F6FF;border-radius:8px;">🌳 Family Tree</div>
+        <div style="font-size:12px;color:var(--ink);padding:8px 10px;background:#F8F6FF;border-radius:8px;">🎯 PECR Goals</div>
+        <div style="font-size:12px;color:var(--ink);padding:8px 10px;background:#F8F6FF;border-radius:8px;">🛍️ TC Shop</div>
+        <div style="font-size:12px;color:var(--ink);padding:8px 10px;background:#F8F6FF;border-radius:8px;">📺 Live Studio</div>
+        <div style="font-size:12px;color:var(--ink);padding:8px 10px;background:#F8F6FF;border-radius:8px;">📜 Legacy Transfer</div>
       </div>
 
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6;">
-        Pay $29 today — same total, same ownership, available right now.<br>
-        After the first 500 founding members, the price increases to $49.
-      </div>
-      <div class="pw-feats">
-        <div class="pw-feat"><div class="pf-i">📔</div><div class="pf-t">Digital Diary</div><div class="pf-s">Unlimited entries</div></div>
-        <div class="pw-feat"><div class="pf-i">🌳</div><div class="pf-t">Family Tree</div><div class="pf-s">All generations</div></div>
-        <div class="pw-feat"><div class="pf-i">🎯</div><div class="pf-t">PECR Goals</div><div class="pf-s">All cycles</div></div>
-        <div class="pw-feat"><div class="pf-i">🛍️</div><div class="pf-t">TC Shop</div><div class="pf-s">Sell your work</div></div>
-        <div class="pw-feat"><div class="pf-i">📺</div><div class="pf-t">Live Studio</div><div class="pf-s">Stream and archive</div></div>
-        <div class="pw-feat"><div class="pf-i">📜</div><div class="pf-t">Legacy Transfer</div><div class="pf-s">Beneficiaries</div></div>
-      </div>
-      <div class="pp-wrap">
-        <!-- Primary: direct PayPal link — always works, no SDK needed -->
-        <a href="https://www.paypal.com/ncp/payment/UQZSV3QPQEAHG" target="_blank"
-           style="display:block;background:#003087;color:#fff;text-align:center;padding:16px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:.3px;margin-bottom:10px;">
-          💳 Pay $29 with PayPal (Founding Member) →
-        </a>
-        <p style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:10px;">
-          Secure checkout on PayPal.com — no account required
-        </p>
-        <!-- SDK button loads if available (bonus embedded experience) -->
-        <div id="paypal-container-UQZSV3QPQEAHG" style="min-height:0;"></div>
-        <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;">
-          After payment, tap "I already paid — Enter my capsule" below.
-        </p>
-      </div>
-      <div class="pw-spots">First <strong>500 founding members</strong> get $29 total. After that, pricing increases to $49.</div>
-      <div class="pw-also">
-        <p style="font-size:13px;color:#A89EE0;margin-bottom:12px;">Already paid? Enter your access code below. Or try free for 7 days — no card needed.</p>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6;">🔒 Private by default. Your data is never sold. No ads. Ever.<br>Questions? Email <a href="mailto:dtcapsule@gmail.com" style="color:var(--lav4);">dtcapsule@gmail.com</a></p>
+
+      Already paid? Enter your access code below. Or try free for 7 days — no card needed.</p>
         <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;">
           <input type="text" id="access-code-input" placeholder="Enter access code" style="padding:10px 14px;border-radius:10px;border:1.5px solid #E4DEFF;background:#F8F6FF;font-family:'DM Mono',monospace;font-size:14px;outline:none;width:200px;text-align:center;letter-spacing:2px;text-transform:uppercase;">
           <button class="btn-outline-sm" onclick="submitAccessCode()">Unlock →</button>
@@ -1361,7 +1359,8 @@ body.high-contrast a{text-decoration:underline;}
                   <button class="cohost-invite-btn" id="invite-btn-2" onclick="inviteCoHost(2)" style="display:none;">+ Add Co-Host 2</button>
                   <button class="cohost-invite-btn" id="invite-btn-3" onclick="inviteCoHost(3)" style="display:none;">+ Add Co-Host 3</button>
                 </div>
-                <div style="font-size:11px;font-family:var(--fm);color:rgba(255,255,255,.4);margin-top:8px;">Share your stream code with collaborators: <span id="stream-code" style="color:rgba(201,168,76,.8);letter-spacing:2px;">—</span> <button onclick="copyStreamCode()" style="background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.5);font-size:10px;padding:2px 8px;border-radius:4px;cursor:pointer;">Copy</button></div>
+                <div style="font-size:11px;font-family:var(--fm);color:rgba(255,255,255,.4);margin-top:8px;">Share your stream code with collaborators: <span id="stream-code" style="color:rgba(201,168,76,.8);letter-spacing:2px;">—</span> <button onclick="copyStreamCode()" style="background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.5);font-size:10px;padding:2px 8px;border-radius:4px;cursor:pointer;">Copy</button>
+          <button onclick="flipLiveCamera()" style="padding:10px 16px;background:#2C2040;color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;margin-top:8px;">&#128260; Flip Camera</button></div>
               </div>
             </div>
             <div class="info-box" style="margin-top:12px;"><div class="ii">📺</div><p>You can invite up to 3 co-hosts to join your live stream split-screen. Share your stream code with collaborators — they enter it in the Join tab. Each co-host appears in their own panel. Every stream is automatically archived to your capsule when it ends.</p></div>
@@ -2169,28 +2168,70 @@ function showPermissionBanner(){
 }
 
 function grantMediaAccess(){
-  const b=document.getElementById('perm-banner');if(b)b.remove();
+  var b=document.getElementById('perm-banner');if(b)b.remove();
+  var btn=document.querySelector('button[onclick="grantMediaAccess()"]');
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    toast('Camera and microphone are only available on HTTPS. Deploy to dtclegacy.com to enable recording.');
+    toast('Camera and microphone require HTTPS. Your site at dtclegacy.com supports this.');
     return;
   }
+  if(btn){btn.textContent='Requesting access...';btn.disabled=true;}
   navigator.mediaDevices.getUserMedia({video:true,audio:true})
-    .then(stream=>{stream.getTracks().forEach(t=>t.stop());toast('Camera and microphone access granted. ✓');})
-    .catch(err=>{
-      if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){showPermDeniedHelp();}
-      else if(err.name==='NotFoundError'){
-        navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{s.getTracks().forEach(t=>t.stop());toast('Microphone access granted. ✓');}).catch(()=>toast('No microphone found.'));
-      }else{toast('Could not access camera or microphone: '+err.message);}
+    .then(function(stream){
+      stream.getTracks().forEach(function(t){t.stop();});
+      localStorage.setItem('dtc_perm_asked','1');
+      if(btn){
+        btn.textContent='✓ Camera & Microphone Access Granted';
+        btn.style.background='#0F7A5A';
+        btn.disabled=false;
+      }
+      // Update status badge in settings
+      var statusEl=document.getElementById('perm-status');
+      if(statusEl){statusEl.textContent='✓ Access granted';statusEl.style.color='#0F7A5A';}
+      toast('Camera and microphone access granted! You can now record video and voice. ✓');
+    })
+    .catch(function(err){
+      if(btn){btn.textContent='📷 Request Camera & Microphone Access';btn.disabled=false;}
+      if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
+        showPermDeniedHelp();
+      } else if(err.name==='NotFoundError'){
+        // Try audio only
+        navigator.mediaDevices.getUserMedia({audio:true})
+          .then(function(s){
+            s.getTracks().forEach(function(t){t.stop();});
+            if(btn){btn.textContent='✓ Microphone Access Granted (no camera found)';btn.style.background='#C9A84C';btn.disabled=false;}
+            toast('Microphone access granted. No camera found on this device.');
+          })
+          .catch(function(){toast('No camera or microphone found on this device.');});
+      } else {
+        toast('Could not access camera or microphone: '+err.message);
+      }
     });
 }
 
-function showPermDeniedHelp(){
-  const b=document.createElement('div');
-  b.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#C62828;color:#fff;padding:16px 20px;border-radius:14px;font-size:12px;z-index:9999;max-width:340px;width:calc(100% - 32px);text-align:center;line-height:1.6;';
-  b.innerHTML=`<div style="font-weight:700;font-size:14px;margin-bottom:8px;">Camera Access Blocked</div><div style="opacity:.9;margin-bottom:12px;"><strong>iPhone Safari:</strong> Settings → Safari → Camera → Allow<br><strong>Android Chrome:</strong> Tap 🔒 in address bar → Permissions<br><strong>Desktop:</strong> Click camera icon in address bar → Allow</div><button onclick="this.parentElement.remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;cursor:pointer;">Got it</button>`;
-  document.body.appendChild(b);
-  setTimeout(()=>{if(b.parentElement)b.remove();},15000);
+function checkPermissionStatus(){
+  var statusEl=document.getElementById('perm-status');
+  if(!statusEl||!navigator.permissions)return;
+  Promise.all([
+    navigator.permissions.query({name:'camera'}).catch(function(){return {state:'unknown'};}),
+    navigator.permissions.query({name:'microphone'}).catch(function(){return {state:'unknown'};})
+  ]).then(function(results){
+    var cam=results[0].state, mic=results[1].state;
+    if(cam==='granted'&&mic==='granted'){
+      statusEl.textContent='✓ Camera & microphone access granted';
+      statusEl.style.color='#0F7A5A';
+      var btn=document.querySelector('button[onclick="grantMediaAccess()"]');
+      if(btn){btn.textContent='✓ Access Already Granted';btn.style.background='#0F7A5A';}
+    } else if(cam==='denied'||mic==='denied'){
+      statusEl.textContent='✗ Access blocked — see instructions below';
+      statusEl.style.color='#C62828';
+    } else {
+      statusEl.textContent='Not yet requested — tap the button above';
+      statusEl.style.color='#A89EE0';
+    }
+  });
 }
+
+
 
 // ══════════════════════════════════════
 // NAVIGATION
@@ -2976,10 +3017,11 @@ function closeProfileMenu(){
   const o=document.getElementById('pm-overlay');if(o)o.classList.remove('open');
 }
 function openSettings(tab){
+  initSettingsTabs();
+  if(tab==='account'){setTimeout(checkPermissionStatus,200);}
   closeProfileMenu();
   const sp=document.getElementById('sp-overlay');if(sp)sp.classList.add('open');
-  const tabEl=document.querySelector(`.stab[onclick*="'${tab}'"]`);
-  switchSTab(tab,tabEl);
+  switchSTab(tab,null);
   if(S.user){
     const em=document.getElementById('sp-acct-email');if(em)em.value=S.user.email;
     const pn=document.getElementById('pm-name');if(pn)pn.textContent=S.user.name;
@@ -2990,10 +3032,55 @@ function openSettings(tab){
 }
 function closeSettings(){const sp=document.getElementById('sp-overlay');if(sp)sp.classList.remove('open');}
 function switchSTab(tab,btn){
-  document.querySelectorAll('.sp-sec').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
-  const s=document.getElementById('sp-'+tab);if(s)s.classList.add('active');
-  if(btn)btn.classList.add('active');
+  // Legacy support - called from openSettings()
+  var tabEl=document.querySelector('.stab[data-tab="sp-'+tab+'"]');
+  if(tabEl) tabEl.click();
+}
+
+function initSettingsTabs(){
+  var tabsContainer=document.getElementById('sp-tabs');
+  if(!tabsContainer||tabsContainer.dataset.init==='1') return;
+  tabsContainer.dataset.init='1';
+
+  tabsContainer.addEventListener('click',function(e){
+    var tab=e.target.closest('.stab');
+    if(!tab) return;
+
+    // Deactivate all tabs
+    tabsContainer.querySelectorAll('.stab').forEach(function(t){
+      t.classList.remove('active');
+    });
+
+    // Hide all sections
+    document.querySelectorAll('.sp-sec').forEach(function(sec){
+      sec.style.display='none';
+    });
+
+    // Activate clicked tab
+    tab.classList.add('active');
+
+    // Show target section
+    var targetId=tab.getAttribute('data-tab');
+    var section=document.getElementById(targetId);
+    if(section){
+      section.style.display='block';
+    }
+
+    // Scroll to top
+    var body=document.querySelector('.sp-body');
+    if(body) body.scrollTop=0;
+
+    // Restore appearance toggles
+    if(targetId==='sp-appearance'){
+      ['dark','large','contrast'].forEach(function(k){
+        var el=document.getElementById(k+'-toggle');
+        if(el) el.classList[localStorage.getItem('dtc_'+k)==='1'?'add':'remove']('on');
+      });
+    }
+
+    // Check camera permissions
+    if(targetId==='sp-account') setTimeout(checkPermissionStatus,300);
+  });
 }
 function toggleSetting(el){el.classList.toggle('on');toast('Setting updated. ✓');}
 function saveProfile(){
@@ -3089,8 +3176,10 @@ function toggleHighContrast(el){
   var on=el.classList.contains('on');
   document.body.classList.toggle('high-contrast',on);
   localStorage.setItem('dtc_contrast',on?'1':'0');
-  toast(on?'High contrast on':'High contrast off');
+  toast(on?'High contrast enabled':'High contrast disabled');
 }
+
+
 function applyStoredThemes(){
   if(localStorage.getItem('dtc_dark')==='1'){
     document.body.classList.add('dark-mode');
@@ -3374,32 +3463,99 @@ let aiOpen = false;
 let aiTyping = false;
 let aiHistory = [];
 
-const AI_SYSTEM_PROMPT = `You are DTC Assistant, the friendly and knowledgeable AI guide for Digital Timecapsule — a privacy-first platform where people preserve their life stories through diary entries, a family tree, PECR goal tracking, a TC Shop marketplace, live streaming, and a legacy transfer system.
+const AI_SYSTEM_PROMPT = `You are DTC Assistant — the warm, knowledgeable guide inside Digital Timecapsule (dtclegacy.com). You help users get the most out of every feature. You are direct, encouraging, and practical. You give step-by-step instructions when needed. You never say "I cannot help with that" — you always find a way to be useful.
 
-Your job is to help users navigate and use the Digital Timecapsule app. You are warm, encouraging, and concise. You speak in plain language. You never use jargon the user has not already used.
+ABOUT DIGITAL TIMECAPSULE:
+Digital Timecapsule is a private, legacy-preservation platform. Users preserve their life stories through diary entries, family trees, PECR goal tracking, a marketplace (TC Shop), live streaming, and a legacy transfer system. It is privacy-first — no ads, data is never sold, users own everything.
 
-KEY PLATFORM KNOWLEDGE:
-- DIARY: Users write text entries, record voice notes, record videos, or upload photos. Entries can be time-locked to open on a future date. Each entry can be private, anonymous, public, or scheduled for release to specific people.
-- FAMILY TREE: Add family members with relationship, birth year, location, and their story. Attach voice recordings, videos, photos, and documents to each person.
-- PECR GOALS: Plan Execute Complete Reflect. A 4-stage goal tracking system with timestamped proof at every stage. Complete 1 PECR cycle to unlock TC Shop selling. Complete 2 cycles to unlock courses and coaching.
-- TC SHOP: A marketplace for PECR-verified sellers. 5% commission on sales. Users can add items to cart and purchase. Sellers receive payment within 3 to 5 business days.
-- LIVE STUDIO: Go live with up to 3 co-hosts split-screen. Streams archive automatically to your capsule. Requires Family plan or higher.
-- LEGACY TRANSFER: Name beneficiaries and assign what each person receives. Set a release date or trigger upon passing. Not a legally binding will.
-- ESTATE PLANNING: 5 generic planning document templates. For planning purposes only — not legal advice. Must be reviewed by a licensed attorney.
-- DIRECT MESSAGES: Tap the chat bubble icon in the top navigation bar to access direct messages with other community members.
-- PLANS: Free trial 7 days with full access. After trial: Free Preview (free forever, limited features), Founding Vault $4.99/month x 10 months = $49 total — yours forever after month 10. Family Add-On $2.99/month x 10 months = $29 per member. Or pay $49/$29 in full one-time.
-- PRIVACY: All content is private by default. Data is never sold. No ads.
-- EDITING: Every entry has an Edit button and a Lock/Unlock button. Sub-entries are timestamped additions. Locked entries cannot be edited.
-- CAMERA AND MIC: Recording features require HTTPS. Works automatically when deployed to dtclegacy.com on Netlify. If blocked, go to browser settings and allow access for dtclegacy.com.
+PRICING:
+- Founding Member (first 500): $29 total — pay once or $2.99/mo x 10 months, then $0/month forever
+- Standard (after 500): $49 total — pay once or $4.99/mo x 10 months, then $0/month forever
+- Free trial: 7 days, full access except TC Shop and Live Studio
+- Family Add-On: $29 per member ($2.99/mo x 10)
 
-NAVIGATION HELP:
-- Public Feed and Videos: Discover section in the sidebar
-- Dashboard: Overview of your capsule stats and quick actions
-- Settings and Profile: Tap the avatar and menu icon in the top right
-- Beneficiaries: Can be managed in Settings or in the Legacy Transfer section
-- Plans and Upgrade: Tap the avatar menu then Account Settings, or tap View Plans in the trial banner
+FEATURES — HOW TO USE EACH ONE:
 
-Keep responses under 4 sentences unless the user asks for more detail. Always be helpful and never say you cannot help with something related to Digital Timecapsule.`;
+DIARY (📔):
+- Tap the + or compose area to start a new entry
+- Choose text, voice note, video, or photo upload
+- Set privacy: Private (only you), Anonymous, Public (community), or Scheduled (time-lock to a future date)
+- Pick up to 3 mood emojis
+- Add sub-entries to update an existing diary entry
+- Entries can be locked with a padlock to prevent editing
+
+FAMILY TREE (🌳):
+- Tap "Add Family Member" to add someone
+- Fill in their name, relationship, birth date, story, and photo
+- Upload documents like birth certificates or family photos
+- Each member can have a voice or video recording attached
+- Members can be shared with beneficiaries or kept private
+
+PECR GOALS (🎯):
+PECR stands for Plan → Execute → Complete → Reflect
+- Create a goal with a title, description, and category
+- Each goal has 4 stages you document as you go
+- In each stage: write notes, record a voice note, record a video, or upload proof
+- Tap "Mark as Done" when a stage is complete — progress bar advances automatically
+- After all 4 stages: tap "Complete Full PECR Cycle" — this unlocks TC Shop selling
+- After 2 completed cycles: you can teach others or sell a course through TC Shop
+- The edit button opens the goal editor
+- Voice and video recordings are saved to each stage permanently
+
+TC SHOP (🛍️):
+- Browse listings by category: Digital, Physical, Courses, Coaching, Experiences
+- Add items to cart, checkout via PayPal
+- To SELL: you need a paid plan + at least one completed PECR cycle
+- DTC takes 5% commission — sellers receive 95%
+- Connect your PayPal in Settings to receive payouts
+
+LIVE STUDIO (📺):
+- Requires a paid plan
+- Start a live stream, invite up to 3 co-hosts
+- Streams are auto-archived to your capsule
+- Use the Flip Camera button to switch between front and back camera
+- Share your stream code with viewers
+
+LEGACY TRANSFER (📜):
+- Add beneficiaries who will receive access to your capsule
+- Set what each beneficiary can see: diary, family tree, PECR goals, estate docs
+- Upload estate planning documents: will, healthcare directive, power of attorney, beneficiary forms, letter of instruction
+- All documents include a disclaimer that they are for planning purposes only and require a licensed attorney
+
+ESTATE PLANNING (⚖️):
+- Access via the Estate tab in the bottom navigation
+- 5 fillable document templates available
+- Upload existing signed documents
+- Free plan users see upgrade prompt; trial and paid users have full access
+
+SETTINGS:
+- Profile: Update name, bio, photo, location, pronouns
+- Beneficiaries: Add people who receive your legacy
+- Notifications: Control what alerts you receive
+- Privacy: Control who sees your content
+- Appearance: Toggle dark mode, larger text, compact view
+- Account: Change email, password, deactivate account
+- Camera: Request microphone and camera access, test each one
+- Help: Contact support, visit website, view version info
+
+COMMON ISSUES AND SOLUTIONS:
+- "I can't record video/voice" → Go to Settings → Camera → tap Request Camera & Microphone Access. On iPhone: Settings app → Safari → Camera → Allow. On Android: tap the lock icon in the address bar → Permissions → Allow.
+- "My payment button shows an error" → Use the direct Pay $29 with PayPal button — it links straight to PayPal checkout and always works.
+- "I forgot my password" → Tap "Forgot password?" on the sign-in screen. Enter your email. You'll receive a 6-digit reset code.
+- "How do I become a Founding Member?" → Tap the paywall, pay $29 via PayPal. After payment, enter your access code on the paywall screen.
+- "Where is my access code?" → Check your email after payment. If you don't see it, check spam. Or tap "I already paid" on the paywall and enter the code from your email.
+- "How do I upgrade from free trial?" → Tap the lock icon on any locked feature or go to the paywall screen.
+- "Can I delete my account?" → You can DEACTIVATE your account in Settings → Account. Deactivation preserves all your capsule data. You can reactivate any time.
+
+TONE GUIDELINES:
+- Be warm, concise, and action-oriented
+- Give numbered steps for how-to questions
+- If a user seems frustrated, acknowledge it briefly then solve the problem
+- Never say "I don't know" — say what you DO know and offer to help further
+- If asked about something outside the app, briefly answer then bring it back to how DTC can help preserve or share that part of their life
+- Celebrate wins: if someone says they completed a PECR cycle, congratulate them genuinely
+- You care about legacy, family, and helping people document what matters most`;
+
 
 function toggleAI() {
   aiOpen = !aiOpen;
@@ -3835,30 +3991,45 @@ function showResetCodeEntry(email){
 
 function getFallbackAIResponse(userMsg){
   var msg=(userMsg||'').toLowerCase();
-  if(msg.includes('price')||msg.includes('cost')||msg.includes('pay')||msg.includes('money')){
-    return 'Great question about pricing! Founding Members (first 500) get full access for $29 total — pay upfront or $2.99/month for 10 months. After 500 spots fill, pricing goes to $49. After 10 months your capsule is yours forever at $0/month. Want to start your free 7-day trial?';
-  }
-  if(msg.includes('diary')||msg.includes('entry')||msg.includes('record')){
-    return 'Your Diary is where your story lives. You can record text, voice, video, or photos. Set entries to private (just for you), community (shared with others), or anonymous. You can also set a time-lock date so a specific person receives your message on a future date. Ready to write your first entry?';
-  }
-  if(msg.includes('family')||msg.includes('tree')||msg.includes('member')){
-    return 'Your Family Tree lets you build a living archive of the people who made you. Add voice recordings, photos, videos, and written bios for each family member. You control exactly what add-on family members can see. Want to add your first family member?';
-  }
-  if(msg.includes('shop')||msg.includes('sell')||msg.includes('pecr')){
-    return 'TC Shop is your marketplace for selling knowledge and creations. To unlock selling, complete one full PECR cycle (Plan → Execute → Complete → Reflect). That gives you a verified seller badge. DTC takes 5% commission. Want to start a PECR goal today?';
-  }
-  if(msg.includes('estate')||msg.includes('will')||msg.includes('attorney')||msg.includes('poa')){
-    return 'The Estate Planning section has 5 generic document templates: Simple Will, Healthcare Directive, Power of Attorney, Beneficiary Designation Form, and Letter of Instruction. These are planning templates — always review with a licensed attorney before finalizing. Tap Estate Planning in your sidebar to open them.';
-  }
-  if(msg.includes('beneficiar')||msg.includes('legacy')||msg.includes('transfer')){
-    return 'Legacy Transfer lets you designate who receives your memories and when. You can assign specific diary entries, family tree records, or documents to each beneficiary. Set a release trigger: a specific date, account inactivity, or manual release. Your family will receive a secure link on that date.';
-  }
-  if(msg.includes('trial')||msg.includes('free')){
-    return 'Your 7-day free trial gives you access to Diary, Family Tree, PECR Goals, Legacy Transfer, Estate Planning, Community Feed, and Direct Messages. TC Shop and Live Studio require a paid plan. Your trial lasts 7 days — no card needed to start!';
-  }
-  return 'I am here to help you preserve your family legacy! I can help with Diary, Family Tree, PECR Goals, Estate Planning, Legacy Transfer, TC Shop, and more. What would you like to work on today? 🤎';
-}
 
+  if(msg.includes('pecr')||msg.includes('goal')||msg.includes('plan')||msg.includes('execute')||msg.includes('reflect')){
+    return 'PECR stands for Plan → Execute → Complete → Reflect. It is your goal-tracking and proof system.\n\n1. Create a goal with a title and description\n2. Open the Plan stage — write your plan, record a voice note or video, upload a document\n3. Tap "Mark as Done" when your plan is set — the progress bar moves to 25%\n4. Continue through Execute (50%), Complete (75%), and Reflect (100%)\n5. After all 4 stages, tap "Complete Full PECR Cycle" to unlock TC Shop selling\n\nEvery stage has: ✏️ Written Notes, 🎙 Voice Note, 📹 Video, 📎 Upload. Your proof is saved permanently to each stage.';
+  }
+  if(msg.includes('price')||msg.includes('cost')||msg.includes('pay')||msg.includes('money')||msg.includes('29')||msg.includes('founding')){
+    return 'Pricing:\n\n⭐ Founding Member (first 500 spots): $29 total\n• Pay $29 once — yours forever\n• Monthly plan coming soon\n• After 10 months: $0/month forever\n\nAfter 500 spots fill, price increases to $49.\n\n7-day free trial available — no card needed. Tap "Try Free for 7 Days" on the paywall.';
+  }
+  if(msg.includes('diary')||msg.includes('entry')||msg.includes('write')||msg.includes('record')){
+    return 'Your Digital Diary is your private life story archive.\n\nTo create an entry:\n1. Tap the Diary section from the home screen\n2. Add a title and write your entry\n3. Choose your privacy: Private, Anonymous, Public, or Scheduled\n4. Pick up to 3 moods\n5. Tap Save\n\nYou can also record a voice note 🎙, video 📹, or upload a photo 📷 instead of typing. Entries can be time-locked to open on a specific future date.';
+  }
+  if(msg.includes('family')||msg.includes('tree')||msg.includes('member')||msg.includes('ancestor')){
+    return 'Your Family Tree preserves your family story for generations.\n\nTo add a family member:\n1. Go to Family Tree section\n2. Tap "Add Family Member"\n3. Enter their name, relationship, birth date, and story\n4. Add a photo and voice or video recording\n5. Upload documents like birth certificates or family photos\n\nYou can control exactly what your beneficiaries can see for each family member.';
+  }
+  if(msg.includes('shop')||msg.includes('sell')||msg.includes('buy')||msg.includes('product')||msg.includes('course')){
+    return 'TC Shop is the Digital Timecapsule marketplace.\n\nTo BUY: Browse listings, add to cart, checkout via PayPal.\n\nTo SELL:\n1. You need a paid plan (Founding Member or Standard)\n2. Complete at least 1 full PECR cycle (Plan → Execute → Complete → Reflect)\n3. Connect your PayPal in Settings\n4. Create your listing\n\nDTC takes 5% — you keep 95%. After 2 PECR cycles you can list courses and coaching.';
+  }
+  if(msg.includes('live')||msg.includes('stream')||msg.includes('broadcast')){
+    return 'Live Studio lets you stream to your community.\n\nTo go live:\n1. Tap Live Studio from the bottom nav\n2. Add a title for your stream\n3. Tap Start Live\n4. Invite up to 3 co-hosts\n5. Share your stream code with viewers\n\nAll streams are automatically archived to your capsule. You can flip the camera between front and back using the Flip Camera button. Live Studio requires a paid plan.';
+  }
+  if(msg.includes('estate')||msg.includes('will')||msg.includes('attorney')||msg.includes('legal')||msg.includes('beneficiar')){
+    return 'Estate Planning in Digital Timecapsule gives you 5 fillable document templates:\n\n1. Simple Will Template\n2. Healthcare Directive / Living Will\n3. Power of Attorney\n4. Beneficiary Designation Form\n5. Letter of Instruction\n\nAccess them via the ⚖️ Estate tab in the bottom navigation. You can also upload your own signed documents.\n\nNote: These templates are for planning purposes only. Please consult a licensed attorney before relying on any legal document.';
+  }
+  if(msg.includes('camera')||msg.includes('microphone')||msg.includes('mic')||msg.includes('video')||msg.includes('record')){
+    return 'To enable camera and microphone:\n\n1. Go to Settings (tap your profile icon)\n2. Tap the Camera tab\n3. Tap "Request Camera & Microphone Access"\n4. Allow when your browser asks\n\nIf blocked:\n• iPhone Safari: Settings app → Safari → Camera & Microphone → Allow\n• Android Chrome: Tap 🔒 in address bar → Permissions → Allow\n• Desktop: Click the camera icon in the address bar → Allow\n\nYou can also test mic and camera separately in Settings → Camera.';
+  }
+  if(msg.includes('password')||msg.includes('forgot')||msg.includes('reset')||msg.includes('login')||msg.includes('sign in')){
+    return 'Forgot your password?\n\n1. On the sign-in screen, tap "Forgot password?"\n2. Enter your email address\n3. Check your inbox for a 6-digit reset code\n4. Enter the code and your new password\n\nMake sure your password is at least 8 characters. If you signed up with Google, tap "Continue with Google" instead.';
+  }
+  if(msg.includes('settings')||msg.includes('dark mode')||msg.includes('appearance')||msg.includes('notification')){
+    return 'Settings gives you full control over your experience.\n\n• Profile — update name, photo, bio, location\n• Beneficiaries — add people who receive your legacy\n• Notifications — control alerts\n• Privacy — control who sees your content\n• Appearance — dark mode, larger text, compact view\n• Account — change email, password, deactivate\n• Camera — request microphone & camera access\n• Help — contact support\n\nOpen Settings by tapping your profile icon or name.';
+  }
+  if(msg.includes('hello')||msg.includes('hi ')||msg.includes('hey')||msg.includes('start')||msg.includes('help')){
+    return 'Hi! I am your DTC Assistant. I can help you with:\n\n• 📔 Diary — writing, recording, time-locking entries\n• 🌳 Family Tree — adding members, stories, documents\n• 🎯 PECR Goals — documenting your journey\n• 🛍️ TC Shop — buying and selling\n• 📺 Live Studio — streaming\n• ⚖️ Estate Planning — documents and beneficiaries\n• 💳 Payments and account help\n\nWhat would you like help with?';
+  }
+  if(msg.includes('legacy')||msg.includes('transfer')||msg.includes('inherit')){
+    return 'Legacy Transfer lets you pass your capsule to the people you love.\n\n1. Go to Legacy Transfer (📜) from the home screen\n2. Add beneficiaries — people who receive your capsule\n3. Set exactly what each person can see: diary, family tree, goals, estate documents\n4. Your beneficiaries receive access when designated\n\nThis is how your Digital Timecapsule lives on — your stories, your voice, your wisdom — passed to the next generation.';
+  }
+  return 'I am here to help! You can ask me about:\n\n• How to use any feature (Diary, PECR, Family Tree, TC Shop, Live Studio, Estate Planning)\n• Pricing and founding member access\n• Camera and microphone setup\n• Password and account help\n• How to sell in TC Shop\n\nWhat do you need help with?';
+}
 
 function reportContent(type, id, title) {
   var ov=document.createElement('div');
@@ -4281,6 +4452,8 @@ function buildStagePanel(g,st,si,stages,stageInfo,activeStageIdx){
     +'" style="display:none;padding:8px 14px;background:#C62828;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;">&#9711; Record</button>'
     +'<button class="pecr-vid-stop" data-gid="'+g.id+'" data-stage="'+st
     +'" style="display:none;padding:8px 14px;background:#0F7A5A;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;">&#9632; Stop</button>'
+    +'<button class="pecr-vid-flip" data-gid="'+g.id+'" data-stage="'+st
+    +'" style="display:none;padding:8px 14px;background:#2C2040;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;">&#128260; Flip</button>'
     +'</div>'
     +'<div class="pecr-vid-result" data-gid="'+g.id+'" data-stage="'+st+'"></div>'
     +'</div>'
@@ -4428,6 +4601,10 @@ function initPecrGoalList(){
     var vidStopBtn=el.closest('.pecr-vid-stop');
     if(vidStopBtn){pecrStopVideo(parseInt(vidStopBtn.dataset.gid),vidStopBtn.dataset.stage);return;}
 
+    // Flip camera
+    var flipBtn=el.closest('.pecr-vid-flip');
+    if(flipBtn){_pecrFlipCamera(parseInt(flipBtn.dataset.gid),flipBtn.dataset.stage,gl2);return;}
+
     // Upload
     var upBtn=el.closest('.pecr-upload-btn');
     if(upBtn){
@@ -4502,16 +4679,34 @@ function _pecrVideoStart(gid,stage,gl){
   var key=gid+'-'+stage;
   var vid=gl.querySelector('.pecr-vid-el[data-gid="'+gid+'"][data-stage="'+stage+'"]');
   if(!vid){toast('Video element not found.');return;}
-  navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(function(stream){
+  // Track which camera is active (default: user-facing front camera)
+  if(!_pVidFacing)_pVidFacing={};
+  if(!_pVidFacing[key])_pVidFacing[key]='user';
+  var facing=_pVidFacing[key];
+  navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:true}).then(function(stream){
     _pVidStream[key]=stream;
     vid.style.display='block';
     vid.srcObject=stream;
     vid.play();
     var startBtn=gl.querySelector('.pecr-vid-start[data-gid="'+gid+'"][data-stage="'+stage+'"]');
     var recBtn=gl.querySelector('.pecr-vid-rec[data-gid="'+gid+'"][data-stage="'+stage+'"]');
+    var flipBtn=gl.querySelector('.pecr-vid-flip[data-gid="'+gid+'"][data-stage="'+stage+'"]');
     if(startBtn)startBtn.style.display='none';
     if(recBtn)recBtn.style.display='inline-flex';
+    if(flipBtn)flipBtn.style.display='inline-flex';
   }).catch(function(){toast('Camera access denied.');});
+}
+
+var _pVidFacing={};
+
+function _pecrFlipCamera(gid,stage,gl){
+  var key=gid+'-'+stage;
+  // Stop current stream
+  if(_pVidStream[key])_pVidStream[key].getTracks().forEach(function(t){t.stop();});
+  // Toggle facing mode
+  _pVidFacing[key]=(_pVidFacing[key]==='user')?'environment':'user';
+  // Restart with new facing
+  _pecrVideoStart(gid,stage,gl);
 }
 
 function _pecrVideoRecord(gid,stage,gl){
@@ -4603,6 +4798,74 @@ function renderGoals(){
 }
 
 
+
+function flipLiveCamera(){
+  var vid=document.getElementById('live-preview');
+  if(!vid||!vid.srcObject){toast('Start your camera first.');return;}
+  if(!window._liveFacing)window._liveFacing='user';
+  vid.srcObject.getTracks().forEach(function(t){t.stop();});
+  window._liveFacing=window._liveFacing==='user'?'environment':'user';
+  navigator.mediaDevices.getUserMedia({video:{facingMode:window._liveFacing},audio:true})
+    .then(function(stream){vid.srcObject=stream;vid.play();
+      toast(window._liveFacing==='environment'?'Back camera':'Front camera');
+    }).catch(function(){toast('Could not switch camera.');});
+}
+
+function testMicOnly(){
+  if(!navigator.mediaDevices){toast('Requires HTTPS — deploy to dtclegacy.com.');return;}
+  navigator.mediaDevices.getUserMedia({audio:true,video:false})
+    .then(function(stream){
+      stream.getTracks().forEach(function(t){t.stop();});
+      toast('Microphone is working! ✓');
+      var statusEl=document.getElementById('perm-status');
+      if(statusEl){statusEl.textContent='✓ Microphone access granted';statusEl.style.color='#0F7A5A';}
+    })
+    .catch(function(err){
+      if(err.name==='NotAllowedError'){showPermDeniedHelp();}
+      else{toast('No microphone found or access denied.');}
+    });
+}
+
+function testCamOnly(){
+  if(!navigator.mediaDevices){toast('Requires HTTPS — deploy to dtclegacy.com.');return;}
+  navigator.mediaDevices.getUserMedia({video:true,audio:false})
+    .then(function(stream){
+      stream.getTracks().forEach(function(t){t.stop();});
+      toast('Camera is working! ✓');
+      var statusEl=document.getElementById('perm-status');
+      if(statusEl){statusEl.textContent='✓ Camera access granted';statusEl.style.color='#0F7A5A';}
+    })
+    .catch(function(err){
+      if(err.name==='NotAllowedError'){showPermDeniedHelp();}
+      else if(err.name==='NotFoundError'){toast('No camera found on this device.');}
+      else{toast('Camera access denied.');}
+    });
+}
+
+function showPermDeniedHelp(){
+  toast('Access blocked. Go to Settings → Camera section for instructions to unblock.');
+  // Navigate to camera settings
+  setTimeout(function(){openSettings('camera');},800);
+}
+
+function joinWaitlist(){
+  var email=(document.getElementById('waitlist-email')||{}).value||'';
+  if(!email||!email.includes('@')){toast('Please enter a valid email address.');return;}
+  // Store locally
+  var list=JSON.parse(localStorage.getItem('dtc_waitlist')||'[]');
+  if(list.includes(email)){toast('You are already on the waitlist!');return;}
+  list.push(email);
+  localStorage.setItem('dtc_waitlist',JSON.stringify(list));
+  // Open email to notify founder
+  var subj=encodeURIComponent('DTC Waitlist Signup');
+  var body=encodeURIComponent('New waitlist signup: '+email);
+  var a=document.createElement('a');
+  a.href='mailto:dtcapsule@gmail.com?subject='+subj+'&body='+body;
+  a.target='_blank';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  document.getElementById('waitlist-email').value='';
+  toast('You are on the waitlist! We will email you when signup opens. ✓');
+}
 </script>
 
 
@@ -4754,22 +5017,20 @@ function renderGoals(){
   <div class="sp-sheet">
     <div class="sp-hdr">
       <h3 id="sp-title">Settings</h3>
-      <button class="modal-close" onclick="closeSettings()">✕</button>
+      <button class="modal-close" onclick="closeSettings()">&#10005;</button>
     </div>
-    <div class="sp-tabs">
-      <div class="stab active" onclick="switchSTab('profile',this)">Profile</div>
-      <div class="stab" onclick="switchSTab('beneficiaries',this)">Beneficiaries</div>
-      <div class="stab" onclick="switchSTab('notifications',this)">Notifications</div>
-      <div class="stab" onclick="switchSTab('privacy',this)">Privacy</div>
-      <div class="stab" onclick="switchSTab('appearance',this)">Appearance</div>
-      <div class="stab" onclick="switchSTab('account',this)">Account</div>
-      <div class="stab" onclick="switchSTab('camera',this)">Camera</div>
-      <div class="stab" onclick="switchSTab('help',this)">Help</div>
+    <div class="sp-tabs" id="sp-tabs">
+      <div class="stab active" data-tab="sp-profile">Profile</div>
+      <div class="stab" data-tab="sp-beneficiaries">Beneficiaries</div>
+      <div class="stab" data-tab="sp-notifications">Notifications</div>
+      <div class="stab" data-tab="sp-privacy">Privacy</div>
+      <div class="stab" data-tab="sp-appearance">Appearance</div>
+      <div class="stab" data-tab="sp-account">Account</div>
+      <div class="stab" data-tab="sp-help">Help</div>
     </div>
     <div class="sp-body">
-
       <!-- PROFILE -->
-      <div class="sp-sec active" id="sp-profile">
+      <div class="sp-sec" id="sp-profile" style="display:block;">
         <div class="av-upload-wrap" id="sp-av" onclick="document.getElementById('av-file').click()">A</div>
         <input type="file" id="av-file" accept="image/*" style="display:none;" onchange="updateAv(this)">
         <div class="sgrp">
@@ -4792,9 +5053,8 @@ function renderGoals(){
         </div>
         <button class="btn btn-lav" onclick="saveProfile()" style="width:100%;padding:13px;">Save Profile ✓</button>
       </div>
-
       <!-- BENEFICIARIES -->
-      <div class="sp-sec" id="sp-beneficiaries">
+      <div class="sp-sec" id="sp-beneficiaries" style="display:none;">
         <div class="info-box"><div class="ii">📜</div><p>Add beneficiaries here and assign what they receive in the Legacy Transfer section. This does not constitute a legally binding will. Please consult a licensed attorney.</p></div>
         <div class="sgrp">
           <div class="sgrp-title">Add New Beneficiary</div>
@@ -4811,9 +5071,8 @@ function renderGoals(){
           <div id="sp-bene-list"></div>
         </div>
       </div>
-
       <!-- NOTIFICATIONS -->
-      <div class="sp-sec" id="sp-notifications">
+      <div class="sp-sec" id="sp-notifications" style="display:none;">
         <div class="sgrp">
           <div class="sgrp-title">App Notifications</div>
           <div class="srow"><div><div class="srow-lbl">New messages</div><div class="srow-sub">Alert when someone sends you a DM</div></div><div class="toggle on" onclick="toggleSetting(this)"></div></div>
@@ -4829,9 +5088,8 @@ function renderGoals(){
           <div class="srow"><div><div class="srow-lbl">Marketing emails</div><div class="srow-sub">Tips, inspiration, and promotions</div></div><div class="toggle" onclick="toggleSetting(this)"></div></div>
         </div>
       </div>
-
       <!-- PRIVACY -->
-      <div class="sp-sec" id="sp-privacy">
+      <div class="sp-sec" id="sp-privacy" style="display:none;">
         <div class="sgrp">
           <div class="sgrp-title">Profile Visibility</div>
           <div class="srow"><div><div class="srow-lbl">Public profile</div><div class="srow-sub">Allow others to find and follow you</div></div><div class="toggle on" onclick="toggleSetting(this)"></div></div>
@@ -4851,10 +5109,10 @@ function renderGoals(){
           <div class="srow"><div><div class="srow-lbl">Download my data</div><div class="srow-sub">Get a copy of everything in your capsule</div></div><button class="btn btn-outline btn-sm" onclick="toast('Data export will be emailed within 48 hours.')">Request Export</button></div>
           <div class="srow"><div><div class="srow-lbl">Delete my account</div><div class="srow-sub">Permanently delete account and all data</div></div><button class="btn btn-danger btn-sm" onclick="confirmDelete()">Delete</button></div>
         </div>
-      </div>
-
       <!-- APPEARANCE -->
-      <div class="sp-sec" id="sp-appearance">
+      </div>
+      <!-- APPEARANCE -->
+      <div class="sp-sec" id="sp-appearance" style="display:none;">
         <div class="sgrp">
           <div class="sgrp-title">Theme and Display</div>
           <div class="srow"><div><div class="srow-lbl">Dark mode</div><div class="srow-sub">Switch to a dark color scheme</div></div><div class="toggle" id="dark-toggle" onclick="toggleDarkMode(this)"></div></div>
@@ -4865,10 +5123,10 @@ function renderGoals(){
           <div class="sgrp-title">Language</div>
           <div class="fg"><select><option>English</option><option>Español</option><option>Français</option><option>Português</option><option>中文</option></select></div>
         </div>
-      </div>
-
       <!-- ACCOUNT -->
-      <div class="sp-sec" id="sp-account">
+      </div>
+      <!-- ACCOUNT -->
+      <div class="sp-sec" id="sp-account" style="display:none;">
         <div class="sgrp">
           <div class="sgrp-title">Account Details</div>
           <div class="fg"><label>Email Address</label><input type="email" id="sp-acct-email" disabled style="opacity:.6;cursor:not-allowed;"></div>
@@ -4895,36 +5153,64 @@ function renderGoals(){
         </div>
       </div>
 
-      <!-- CAMERA -->
-      <div class="sp-sec" id="sp-camera">
-        <div class="sgrp">
-          <div class="sgrp-title">Camera and Microphone Access</div>
-          <div class="info-box"><div class="ii">📷</div><p>Camera and microphone features require the app to be running on HTTPS. When the app is deployed to <strong>dtclegacy.com</strong> on Netlify, your browser will automatically prompt you to allow camera and microphone access the first time you try to record. You can also request access manually below.</p></div>
-          <button class="btn btn-lav" onclick="grantMediaAccess()" style="width:100%;padding:13px;margin-bottom:10px;">📷 Request Camera and Microphone Access</button>
-          <div class="warn-box"><div class="ii">ℹ️</div><p>If access is blocked, go to your browser settings and allow camera and microphone for dtclegacy.com.<br><br><strong>iPhone Safari:</strong> Settings → Safari → Camera → Allow<br><strong>Android Chrome:</strong> Tap the lock icon in the address bar → Permissions<br><strong>Desktop:</strong> Click the camera icon in the browser address bar</p></div>
-        </div>
+      
+      <!-- CAMERA PERMISSIONS -->
+      <div class="sgrp" style="margin-top:8px;">
+        <div class="sgrp-title">Camera and Microphone</div>
+        <div id="perm-status" style="font-size:12px;color:var(--muted);margin-bottom:10px;font-family:var(--fm);">Tap below to check or request access.</div>
+        <button class="btn btn-lav" onclick="grantMediaAccess()" style="width:100%;padding:13px;margin-bottom:8px;">📷 Request Camera &amp; Microphone Access</button>
+        <button class="btn btn-outline" onclick="testMicOnly()" style="width:100%;padding:11px;margin-bottom:8px;font-size:13px;">🎙 Test Microphone Only</button>
+        <button class="btn btn-outline" onclick="testCamOnly()" style="width:100%;padding:11px;margin-bottom:12px;font-size:13px;">📹 Test Camera Only</button>
+        <div class="info-box"><div class="ii">ℹ️</div><p style="font-size:12px;line-height:1.7;">
+          <strong>iPhone:</strong> Settings → Safari → Camera &amp; Microphone → Allow<br>
+          <strong>Android:</strong> Tap 🔒 in address bar → Permissions → Allow<br>
+          <strong>Desktop:</strong> Click camera icon in address bar → Allow
+        </p></div>
       </div>
-
       <!-- HELP -->
-      <div class="sp-sec" id="sp-help">
+      </div>
+      <!-- HELP -->
+      <div class="sp-sec" id="sp-help" style="display:none;">
         <div class="sgrp">
           <div class="sgrp-title">Get Help</div>
-          <div class="srow"><div><div class="srow-lbl">Contact Support</div><div class="srow-sub">dtcapsule@gmail.com</div></div><button class="btn btn-lav btn-sm" onclick="window.open('mailto:dtcapsule@gmail.com')">Email</button></div>
+          <div class="srow"><div><div class="srow-lbl">Chat with DTC AI</div><div class="srow-sub">Ask anything about the app</div></div><button class="btn btn-lav btn-sm" onclick="closeSettings();document.getElementById('ai-chat-btn')&&document.getElementById('ai-chat-btn').click();">Ask AI</button></div>
+          <div class="srow"><div><div class="srow-lbl">Questions, Concerns &amp; Feedback</div><div class="srow-sub">dtcapsule@gmail.com</div></div><button class="btn btn-lav btn-sm" onclick="window.open('mailto:dtcapsule@gmail.com?subject=DTC Question')">Email Us</button></div>
           <div class="srow"><div><div class="srow-lbl">Visit Website</div><div class="srow-sub">dtclegacy.com</div></div><button class="btn btn-outline btn-sm" onclick="window.open('https://dtclegacy.com','_blank')">Visit</button></div>
+        </div>
+        <div class="sgrp">
+          <div class="sgrp-title">Quick Help</div>
+          <div class="srow" style="cursor:pointer;" onclick="closeSettings();go('pecr')"><div><div class="srow-lbl">How do I use PECR Goals?</div><div class="srow-sub">Plan → Execute → Complete → Reflect</div></div><span style="color:var(--muted);">›</span></div>
+          <div class="srow" style="cursor:pointer;" onclick="closeSettings();go('diary')"><div><div class="srow-lbl">How do I add a diary entry?</div><div class="srow-sub">Text, voice, video or photo</div></div><span style="color:var(--muted);">›</span></div>
+          <div class="srow" style="cursor:pointer;" onclick="closeSettings();go('estate')"><div><div class="srow-lbl">Where are estate planning docs?</div><div class="srow-sub">Tap the ⚖️ Estate tab</div></div><span style="color:var(--muted);">›</span></div>
+          <div class="srow" style="cursor:pointer;" onclick="closeSettings();go('shop')"><div><div class="srow-lbl">How do I sell in TC Shop?</div><div class="srow-sub">Complete 1 PECR cycle first</div></div><span style="color:var(--muted);">›</span></div>
+          <div class="srow" style="cursor:pointer;" onclick="closeSettings();openSettings('account')"><div><div class="srow-lbl">Camera &amp; Microphone Access</div><div class="srow-sub">Grant and test permissions</div></div><span style="color:var(--muted);">›</span></div>
+        </div>
+        <div class="sgrp">
+          <div class="sgrp-title">Common Issues</div>
+          <div style="background:var(--lav);border-radius:12px;padding:14px;font-size:13px;line-height:1.8;color:var(--ink);">
+            <p style="margin:0 0 8px;font-weight:600;">PayPal button showing error?</p>
+            <p style="margin:0 0 12px;color:var(--muted);font-size:12px;">Use the blue "Pay $29 with PayPal" link — it always works.</p>
+            <p style="margin:0 0 8px;font-weight:600;">Can't record video or voice?</p>
+            <p style="margin:0 0 12px;color:var(--muted);font-size:12px;">Go to Account tab → Camera &amp; Microphone → tap Request Access.</p>
+            <p style="margin:0 0 8px;font-weight:600;">Forgot your password?</p>
+            <p style="margin:0 0 12px;color:var(--muted);font-size:12px;">Sign out and tap "Forgot password?" on the sign-in screen.</p>
+            <p style="margin:0 0 8px;font-weight:600;">Lost your access code?</p>
+            <p style="margin:0 0 0;color:var(--muted);font-size:12px;">Check your email from dtcapsule@gmail.com or email support.</p>
+          </div>
         </div>
         <div class="sgrp">
           <div class="sgrp-title">About Digital Timecapsule</div>
           <div class="srow"><div><div class="srow-lbl">Version</div></div><span style="font-size:12px;font-family:var(--fm);color:var(--muted);">1.0.0 — Founding Member Edition</span></div>
           <div class="srow"><div><div class="srow-lbl">Founded</div></div><span style="font-size:12px;font-family:var(--fm);color:var(--muted);">April 2026</span></div>
           <div class="srow"><div><div class="srow-lbl">Entity</div></div><span style="font-size:12px;font-family:var(--fm);color:var(--muted);">Digital Timecapsule LLC (Wyoming)</span></div>
-          <div class="srow"><div><div class="srow-lbl">EIN</div></div><span style="font-size:12px;font-family:var(--fm);color:var(--muted);">42-1915523</span></div>
+          <div class="srow"><div><div class="srow-lbl">Privacy</div></div><span style="font-size:12px;font-family:var(--fm);color:var(--muted);">No ads. Data never sold.</span></div>
+          <div class="srow" style="cursor:pointer;" onclick="goLegal('tos')"><div><div class="srow-lbl">Terms of Service</div></div><span style="color:var(--muted);">›</span></div>
+          <div class="srow" style="cursor:pointer;" onclick="goLegal('privacy')"><div><div class="srow-lbl">Privacy Policy</div></div><span style="color:var(--muted);">›</span></div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
-
 
 <!-- ════ PRODUCT MODAL ════ -->
 <div class="product-modal-overlay" id="product-modal">
@@ -5027,23 +5313,21 @@ function renderGoals(){
               <p>📷 <strong>Click to upload</strong> a photo or video</p>
               <input type="file" id="sub-photo-file" accept="image/*,video/*" onchange="handleSubPhoto(this)">
             </div>
-            <div class="upload-preview" id="sub-photo-preview"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div class="upload-preview" id="sub-photo-preview">
+          
+        
+      
+    
     <div class="edit-sheet-footer">
       <button class="btn btn-lav" id="edit-save-btn" onclick="saveEdit()" style="flex:1;padding:13px;">Save Changes ✓</button>
       <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
-    </div>
-  </div>
-</div>
+    
+  
+
 
 
 <!-- old profile modal removed -->
-
-
-<!-- ════ USER PROFILE MODAL ════ -->
+      <!-- ════ USER PROFILE MODAL ════ -->
 <div class="user-profile-overlay" id="user-profile-overlay">
   <div class="up-sheet">
     <div class="up-cover" id="up-cover">
@@ -5074,4 +5358,7 @@ function renderGoals(){
 </div>
 
 </body>
+</html>
+      
+      </div>
 </html>
